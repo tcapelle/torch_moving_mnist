@@ -1,0 +1,9 @@
+project:
+  output-dir: _docs
+
+website:
+  title: "torch_moving_mnist"
+  site-url: "https://tcapelle.github.io/torch_moving_mnist"
+  description: "A simple Dataset generator for Moving Mnist"
+  repo-branch: main
+  repo-url: "https://github.com/tcapelle/torch_moving_mnist"
