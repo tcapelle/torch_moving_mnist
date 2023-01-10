@@ -6,7 +6,7 @@ torch_moving_mnist
 ## Install
 
 ``` sh
-pip install torch_moving_mnist
+pip install -e .
 ```
 
 ## How to use
@@ -25,10 +25,10 @@ mnist_dataset = MNIST(path, download=True)
 
 ``` python
 affine_params = dict(
-    angle=(-20, 20),
-    translate=((-30, 30), (-30, 30)),
-    scale=(.8, 1.3),
-    shear=(-20, 20),
+    angle=(-20, 20), # rotation in degrees (min and max values)
+    translate=((-30, 30), (-30, 30)), # translation in pixels x and y
+    scale=(.8, 1.3), # scaling in percentage (1.0 = no scaling)
+    shear=(-20, 20), # deformation on the z-plane
 )
 ```
 
