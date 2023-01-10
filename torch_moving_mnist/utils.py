@@ -61,6 +61,7 @@ def _fig_bounds(x):
 
 def show_image(im, ax=None, figsize=None, title=None, **kwargs):
     "Show a PIL or PyTorch image on `ax`."
+    cmap=None
     # Handle pytorch axis order
     if hasattrs(im, ('data','cpu','permute')):
         im = im.data.cpu()
@@ -69,13 +70,14 @@ def show_image(im, ax=None, figsize=None, title=None, **kwargs):
         im=np.array(im)
     # Handle 1-channel images
     if im.shape[-1]==1: 
+        cmap = "gray"
         im=im[...,0]
-
+    
     if figsize is None: 
         figsize = (_fig_bounds(im.shape[0]), _fig_bounds(im.shape[1]))
     if ax is None: 
         _,ax = plt.subplots(figsize=figsize)
-    ax.imshow(im, **kwargs)
+    ax.imshow(im, cmap=cmap, **kwargs)
     if title is not None: 
         ax.set_title(title)
     ax.axis('off')

@@ -68,7 +68,7 @@ class MovingMNIST:
         self.concat = concat
     
     def random_digit(self):
-        img = self.mnist[[random.randint(0, len(self.mnist))]]
+        img = self.mnist[[random.randrange(0, len(self.mnist))]]
         return TF.pad(img, padding=self.pad) 
     
     def random_trajectory(self):

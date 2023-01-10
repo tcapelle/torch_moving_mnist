@@ -34,15 +34,42 @@ may include up to 3 digitis. Image size is 64.
 ds = MovingMNIST(affine_params=affine_params, n=10, num_digits=[1,2,3], img_size=64)
 ```
 
+when you index the dataset, it generates a random set of MNIST digits
+and trajectories. You could basically only call `ds[0]`
+
 ``` python
-show_images(ds[0], figsize=(20,10))
+sequence = ds[0]
 ```
 
-![](index_files/figure-gfm/cell-5-output-1.png)
+``` python
+show_images(sequence, figsize=(20,10))
+```
+
+![](index_files/figure-gfm/cell-6-output-1.png)
 
 ``` python
-t = ds[0]
+t = sequence
 type(t), t.shape
 ```
 
     (torch.Tensor, torch.Size([10, 1, 64, 64]))
+
+## Dataloader
+
+A simple dataloader would be something like:
+
+``` python
+import torch
+```
+
+``` python
+def get_batch(bs=128):
+    return torch.stack([ds[0] for _ in range(bs)])
+```
+
+``` python
+b = get_batch()
+b.shape
+```
+
+    torch.Size([128, 10, 1, 64, 64])
