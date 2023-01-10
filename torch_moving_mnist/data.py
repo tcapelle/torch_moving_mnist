@@ -58,8 +58,8 @@ class Trajectory:
 import random
 
 class MovingMNIST:
-    def __init__(self, mnist, affine_params: dict=affine_params, num_digits: list[int]=[1, 2], n: int=4, img_size=64, concat=False):
-        self.mnist = mnist.data
+    def __init__(self, path=".", affine_params: dict=affine_params, num_digits: list[int]=[1, 2], n: int=4, img_size=64, concat=False):
+        self.mnist = MNIST(path, download=True).data
         self.affine_params = affine_params
         self.num_digits = num_digits
         self.n = n

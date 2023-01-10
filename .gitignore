@@ -149,3 +149,11 @@ checklink/cookies.txt
 
 # Quarto
 .quarto
+
+
+# wandb
+wandb/
+artifacts/
+MNIST/
+/*/MNIST
+/**/MNIST
