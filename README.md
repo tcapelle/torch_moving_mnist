@@ -14,13 +14,8 @@ pip install -e .
 Fill me in please! Don’t forget code examples:
 
 ``` python
+from torch_moving_mnist.data import MovingMNIST
 from torch_moving_mnist.utils import show_images
-from torchvision.datasets import MNIST
-
-path = "."
-
-#from torchvision
-mnist_dataset = MNIST(path, download=True)
 ```
 
 ``` python
@@ -36,7 +31,7 @@ Create a MovingMNIST dataset with `affine_params`, with 10 frames and
 may include up to 3 digitis. Image size is 64.
 
 ``` python
-ds = MovingMNIST(mnist_dataset, affine_params=affine_params, n=10, num_digits=[1,2,3], img_size=64)
+ds = MovingMNIST(affine_params=affine_params, n=10, num_digits=[1,2,3], img_size=64)
 ```
 
 ``` python
@@ -44,3 +39,10 @@ show_images(ds[0], figsize=(20,10))
 ```
 
 ![](index_files/figure-gfm/cell-5-output-1.png)
+
+``` python
+t = ds[0]
+type(t), t.shape
+```
+
+    (torch.Tensor, torch.Size([10, 1, 64, 64]))
