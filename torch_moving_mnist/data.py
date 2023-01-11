@@ -9,6 +9,7 @@ from torchvision.datasets import MNIST
 
 # %% ../nbs/01_data.ipynb 10
 import random
+from typing import List, Dict
 
 import torch
 import numpy as np
@@ -62,8 +63,8 @@ import random
 
 class MovingMNIST:
     def __init__(self, path=".",  # path to store the MNIST dataset
-                 affine_params: dict=affine_params, # affine transform parameters, refer to torchvision.transforms.functional.affine
-                 num_digits: list[int]=[3], # how many digits to move, random choice between the value provided
+                 affine_params: Dict=affine_params, # affine transform parameters, refer to torchvision.transforms.functional.affine
+                 num_digits: List[int]=[3], # how many digits to move, random choice between the value provided
                  num_frames: int=4, # how many frames to create
                  img_size=64, # the canvas size, the actual digits are always 28x28
                  concat=True, # if we concat the final results (frames, 1, 28, 28) or a list of frames.
