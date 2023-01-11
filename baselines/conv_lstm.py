@@ -2,8 +2,13 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 from torch_moving_mnist.data import MovingMNIST
-from torch_moving_mnist.utils import show_images
 
+from tqdm.auto import tqdm
+
+import wandb
+
+
+wandb.init(project="next-frame-prediction", entity="wandb")
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
@@ -120,6 +125,7 @@ class Seq2Seq(nn.Module):
         return nn.Sigmoid()(output)
 
 
+NUM_FRAMES = 4
 affine_params = dict(
     angle=(-20, 20),  # rotation in degrees (min and max values)
     translate=((-30, 30), (-30, 30)),  # translation in pixels x and y
@@ -130,12 +136,11 @@ dataset = MovingMNIST(
     path=".",
     affine_params=affine_params,
     num_digits=[3],
-    num_frames=4,
+    num_frames=NUM_FRAMES,
     img_size=64,
     concat=True,
     normalize=True,
 )
-
 
 model = Seq2Seq(
     num_channels=1,
@@ -149,3 +154,20 @@ model = Seq2Seq(
 
 optimizer = optim.Adam(model.parameters(), lr=1e-4)
 criterion = nn.BCELoss(reduction="sum")
+
+batch = torch.permute(dataset.get_batch(bs=4), (0, 2, 1, 3, 4)).to(device)
+input_frames = batch[:, :, :NUM_FRAMES - 1, :, :]
+target_frame = batch[:, :, NUM_FRAMES - 1:, :, :]
+predicted_frame = model(input_frames)
+
+pbar = tqdm(range(1, 100), desc="Training")
+for epoch in pbar:
+    model.train()
+    predicted_frame = model(input_frames)
+    loss = criterion(predicted_frame.flatten(), target_frame.flatten())
+    loss.backward()
+    optimizer.step()
+    optimizer.zero_grad()
+    wandb.log({"Loss": float(loss.item())})
+
+wandb.finish()
