@@ -9,7 +9,7 @@ from torchvision.datasets import MNIST
 
 # %% ../nbs/01_data.ipynb 10
 import random
-from typing import List, Dict
+from typing import List, Dict, Tuple
 
 import torch
 import numpy as np
@@ -23,7 +23,7 @@ mnist_stats    = ([0.131], [0.308])
 def padding(img_size=128, mnist_size=28): return (img_size - mnist_size) // 2
 
 # %% ../nbs/01_data.ipynb 21
-def linear_schedule(a, b, n=5):
+def linear_schedule(a:float, b:float, n:int=5):
     "equivalent to np.linspace"
     return [i*(b-a)/(n-1) + a for i in range(n)]
 
@@ -36,14 +36,19 @@ affine_params = SimpleNamespace(
 )
 
 # %% ../nbs/01_data.ipynb 25
-def random_linear_schedule(a, b, n=5):
+def random_linear_schedule(a:float, b:float, n:int=5):
     x = random.uniform(a,b)
     y = random.uniform(a,b)
     return linear_schedule(x, y, n=n)
 
 # %% ../nbs/01_data.ipynb 28
 class Trajectory:
-    def __init__(self, angle, translate, scale, shear, n=5):
+    def __init__(self, 
+                 angle: Tuple[float, float], 
+                 translate: Tuple[Tuple[float, float], Tuple[float,float]], 
+                 scale: Tuple[float, float], 
+                 shear: Tuple[float, float], 
+                 n: int=5):
         self.angle_schedule = random_linear_schedule(*angle, n=n)
         self.scale_schedule = random_linear_schedule(*scale, n=n)
         translate_x = random_linear_schedule(*translate[0], n=n)
@@ -66,9 +71,9 @@ class MovingMNIST:
                  affine_params: Dict=affine_params, # affine transform parameters, refer to torchvision.transforms.functional.affine
                  num_digits: List[int]=[3], # how many digits to move, random choice between the value provided
                  num_frames: int=4, # how many frames to create
-                 img_size=64, # the canvas size, the actual digits are always 28x28
-                 concat=True, # if we concat the final results (frames, 1, 28, 28) or a list of frames.
-                 normalize=True # scale images in [0,1] and normalize them with MNIST stats. Applied at batch level. Have to take care of the canvas size that messes up the stats!
+                 img_size:int=64, # the canvas size, the actual digits are always 28x28
+                 concat:bool=True, # if we concat the final results (frames, 1, 28, 28) or a list of frames.
+                 normalize:bool=True # scale images in [0,1] and normalize them with MNIST stats. Applied at batch level. Have to take care of the canvas size that messes up the stats!
                 ):
         self.mnist = MNIST(path, download=True).data
         self.affine_params = affine_params
