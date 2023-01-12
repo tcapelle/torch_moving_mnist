@@ -63,7 +63,7 @@ def show_image(im, ax=None, figsize=None, title=None, **kwargs):
     "Show a PIL or PyTorch image on `ax`."
     cmap=None
     # Handle pytorch axis order
-    if hasattrs(im, ('data','cpu','permute')):
+    if isinstance(im, torch.Tensor):
         im = im.data.cpu()
         if im.shape[0]<5: im=im.permute(1,2,0)
     elif not isinstance(im, np.ndarray): 
