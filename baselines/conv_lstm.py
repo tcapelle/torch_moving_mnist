@@ -117,5 +117,4 @@ class Seq2Seq(nn.Module):
     def forward(self, X):
         output = self.sequential(X)
         output = self.conv(output[:, :, -1])
-        # return nn.Sigmoid()(output)
-        return output
+        return nn.Sigmoid()(output)
