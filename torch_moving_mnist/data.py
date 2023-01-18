@@ -16,6 +16,8 @@ import torch.nn.functional as F
 import torchvision.transforms as T
 import torchvision.transforms.functional as TF
 
+from fastprogress import progress_bar
+
 mnist_stats    = ([0.131], [0.308])
 
 # %% ../nbs/01_data.ipynb 17
@@ -27,11 +29,12 @@ def linear_schedule(a, b, n=5):
     return [i*(b-a)/(n-1) + a for i in range(n)]
 
 # %% ../nbs/01_data.ipynb 24
-affine_params = SimpleNamespace(
-    angle=(-20, 20),
-    translate=((-30, 30), (-30, 30)),
-    scale=(.8, 1.3),
-    shear=(-20, 20),
+affine_params = dict(
+    angle=(-10, 10), # rotation in degrees (min and max values)
+    translate=((-20, 20), (-20, 20)), # translation in pixels x and y
+    scale=(.8, 1.3), # scaling in percentage (1.0 = no scaling)
+    # shear=(-10, 10), # deformation on the z-plane
+    shear=(0,0),
 )
 
 # %% ../nbs/01_data.ipynb 25
@@ -56,7 +59,7 @@ class Trajectory:
     def apply(self, img):
         return [TF.affine(img, *param) for param in self.points()]
 
-# %% ../nbs/01_data.ipynb 31
+# %% ../nbs/01_data.ipynb 34
 import math
 import random
 
@@ -67,7 +70,7 @@ class MovingMNIST:
                  num_frames: int=4, # how many frames to create
                  img_size=64, # the canvas size, the actual digits are always 28x28
                  concat=True, # if we concat the final results (frames, 1, 28, 28) or a list of frames.
-                 normalize=True # scale images in [0,1] and normalize them with MNIST stats. Applied at batch level. Have to take care of the canvas size that messes up the stats!
+                 normalize=True, # scale images in [0,1] and normalize them with MNIST stats. Applied at batch level. Have to take care of the canvas size that messes up the stats!
                 ):
         self.mnist = MNIST(path, download=True).data
         self.affine_params = affine_params
@@ -109,3 +112,12 @@ class MovingMNIST:
         "Grab a batch of data"
         batch = torch.stack([self[0] for _ in range(bs)])
         return self.batch_tfms(batch) if self.batch_tfms is not None else batch
+    
+    def save(self, fname="mmnist.pt", n_batches=2, bs=32):
+        data = [] 
+        for _ in progress_bar(range(n_batches)):
+            data.append(self.get_batch(bs=bs))
+        
+        data = torch.cat(data, dim=0)
+        print("Saving dataset")
+        torch.save(data, f"{fname}")
