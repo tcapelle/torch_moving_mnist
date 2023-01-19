@@ -157,3 +157,4 @@ artifacts/
 MNIST/
 /*/MNIST
 /**/MNIST
+/**/*.pt
