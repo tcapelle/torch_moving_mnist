@@ -30,9 +30,7 @@ def apply_n_times(tf, x, n=1):
         sequence.append(tf(sequence[n]))
     return sequence
 
-show_images(apply_n_times(tf, pdigit, n=5), figsize=(10,20))
-
-# %% ../nbs/01_data.ipynb 24
+# %% ../nbs/01_data.ipynb 25
 affine_params = SimpleNamespace(
     angle=(-4, 4),
     translate=((-5, 5), (-5, 5)),
@@ -40,7 +38,7 @@ affine_params = SimpleNamespace(
     shear=(-3, 3),
 )
 
-# %% ../nbs/01_data.ipynb 27
+# %% ../nbs/01_data.ipynb 28
 class RandomTrajectory:
     def __init__(self, affine_params, n=5, **kwargs):
         self.angle     = random.uniform(*affine_params.angle)
@@ -62,7 +60,7 @@ class RandomTrajectory:
              f"  shear:     {self.shear}\n)")
         return s
 
-# %% ../nbs/01_data.ipynb 33
+# %% ../nbs/01_data.ipynb 34
 import math
 import random
 from fastprogress import progress_bar
