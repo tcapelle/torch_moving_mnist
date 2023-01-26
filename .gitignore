@@ -158,3 +158,5 @@ MNIST/
 /*/MNIST
 /**/MNIST
 /**/*.pt
+/**/*.pkl
+/**/*.pth
