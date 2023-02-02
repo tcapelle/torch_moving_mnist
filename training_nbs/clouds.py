@@ -19,7 +19,7 @@ class CloudDataset:
                  valid=False, # if True, transforms are deterministic
                 ):
         
-        tfms = [T.Resize((size, int(size*1.7)))]
+        tfms = [T.Resize((size, int(size*1.7)))] if size is not None else []
         tfms += [T.RandomCrop(size)] if not valid else [T.CenterCrop(size)]
         self.tfms = T.Compose(tfms)
         
