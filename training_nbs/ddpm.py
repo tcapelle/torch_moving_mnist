@@ -44,7 +44,7 @@ config = SimpleNamespace(
 logging.basicConfig(format="%(asctime)s - %(levelname)s: %(message)s", level=logging.INFO, datefmt="%I:%M:%S")
 
 
-class Diffusion:
+class FrameDiffusion:
     def __init__(self, noise_steps=1000, beta_start=1e-4, beta_end=0.02, img_size=256, num_classes=10, c_in=3, c_out=3, device="cuda"):
         self.noise_steps = noise_steps
         self.beta_start = beta_start
@@ -216,7 +216,7 @@ if __name__ == '__main__':
     ## seed everything
     set_seed(config.seed)
 
-    diffuser = Diffusion(config.noise_steps, img_size=config.img_size, num_classes=config.num_classes)
+    diffuser = FrameDiffusion(config.noise_steps, img_size=config.img_size, num_classes=config.num_classes)
     with wandb.init(project="train_sd", group="train", config=config) if config.use_wandb else nullcontext():
         diffuser.prepare(config)
         diffuser.fit(config)
